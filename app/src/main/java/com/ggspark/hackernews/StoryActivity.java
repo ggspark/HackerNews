@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.ggspark.hackernews.models.ItemResponse;
@@ -24,7 +25,8 @@ public class StoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_story);
+        findViewById(R.id.card_view).setVisibility(View.GONE);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -37,7 +39,6 @@ public class StoryActivity extends AppCompatActivity {
                 getData();
             }
         });
-
     }
 
     private void getData() {
@@ -62,7 +63,7 @@ public class StoryActivity extends AppCompatActivity {
                             }
                         });
                     }
-                    mAdapter = new RecyclerViewAdapter(response.body());
+                    mAdapter = new RecyclerViewAdapter(response.body(), StoryActivity.this);
                     mRecyclerView.setAdapter(mAdapter);
                 } else {
                     Toast.makeText(StoryActivity.this, "Oops! Unable to get a response.", Toast.LENGTH_SHORT).show();
