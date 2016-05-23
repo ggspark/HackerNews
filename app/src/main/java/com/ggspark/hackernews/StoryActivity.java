@@ -55,6 +55,7 @@ public class StoryActivity extends AppCompatActivity {
                                 Realm.getDefaultInstance().beginTransaction();
                                 Realm.getDefaultInstance().copyToRealmOrUpdate(response.body());
                                 Realm.getDefaultInstance().commitTransaction();
+                                mAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -69,6 +70,7 @@ public class StoryActivity extends AppCompatActivity {
                     Toast.makeText(StoryActivity.this, "Oops! Unable to get a response.", Toast.LENGTH_SHORT).show();
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
+
             }
 
             @Override

@@ -67,6 +67,7 @@ public class CommentActivity extends AppCompatActivity {
                     Realm.getDefaultInstance().beginTransaction();
                     Realm.getDefaultInstance().copyToRealmOrUpdate(response.body());
                     Realm.getDefaultInstance().commitTransaction();
+                    mAdapter.notifyDataSetChanged();
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
 
