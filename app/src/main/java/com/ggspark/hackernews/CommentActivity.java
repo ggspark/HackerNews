@@ -1,5 +1,6 @@
 package com.ggspark.hackernews;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -19,13 +20,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CommentActivity extends AppCompatActivity {
-
+    private ProgressDialog loadingDialog;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Long storyId;
     private ItemResponse item;
+    private int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,11 @@ public class CommentActivity extends AppCompatActivity {
         item = Realm.getDefaultInstance().where(ItemResponse.class).equalTo("id", storyId).findFirst();
         setContentView(R.layout.activity_story);
         findViewById(R.id.detail_container).setVisibility(View.GONE);
+        loadingDialog = new ProgressDialog(CommentActivity.this);
+        loadingDialog.setIndeterminate(true);
+        loadingDialog.setMessage("Loading");
+        loadingDialog.setCancelable(false);
+        loadingDialog.setCanceledOnTouchOutside(false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -58,27 +65,47 @@ public class CommentActivity extends AppCompatActivity {
 
     private void getData() {
         mSwipeRefreshLayout.setRefreshing(true);
+        loadingDialog.show();
         ArrayList<Long> ids = new ArrayList<>();
         for (RealmLong id : item.getKids()) {
             ids.add(id.getKey());
-            APIServices.HN_SERVICE.getItem(id.getKey()).enqueue(new Callback<ItemResponse>() {
-                @Override
-                public void onResponse(Call<ItemResponse> call, Response<ItemResponse> response) {
-                    Realm.getDefaultInstance().beginTransaction();
-                    Realm.getDefaultInstance().copyToRealmOrUpdate(response.body());
-                    Realm.getDefaultInstance().commitTransaction();
-                    mAdapter.notifyDataSetChanged();
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-
-                @Override
-                public void onFailure(Call<ItemResponse> call, Throwable t) {
-                    t.printStackTrace();
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            });
         }
-        mAdapter = new RecyclerViewAdapter(ids.toArray(new Long[ids.size()]), CommentActivity.this);
+        final Long[] comments = ids.toArray(new Long[ids.size()]);
+        count = 0;
+        if (comments != null && comments.length > 0) {
+            for (Long id : comments) {
+                APIServices.HN_SERVICE.getItem(id).enqueue(new Callback<ItemResponse>() {
+                    @Override
+                    public void onResponse(Call<ItemResponse> call, Response<ItemResponse> response) {
+                        Realm.getDefaultInstance().beginTransaction();
+                        Realm.getDefaultInstance().copyToRealmOrUpdate(response.body());
+                        Realm.getDefaultInstance().commitTransaction();
+                        count++;
+                        if (count == comments.length) {
+                            loadingCompleted(comments);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ItemResponse> call, Throwable t) {
+                        t.printStackTrace();
+                        count++;
+                        if (count == comments.length) {
+                            loadingCompleted(comments);
+                        }
+                    }
+                });
+            }
+        } else {
+            mSwipeRefreshLayout.setRefreshing(false);
+            loadingDialog.dismiss();
+        }
+    }
+
+    private void loadingCompleted(Long[] comments) {
+        mAdapter = new RecyclerViewAdapter(comments, CommentActivity.this);
         mRecyclerView.setAdapter(mAdapter);
+        mSwipeRefreshLayout.setRefreshing(false);
+        loadingDialog.dismiss();
     }
 }

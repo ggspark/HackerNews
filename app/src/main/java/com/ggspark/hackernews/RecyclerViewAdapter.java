@@ -54,7 +54,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ItemResponse item = Realm.getDefaultInstance().where(ItemResponse.class).equalTo("id", mDataset[position]).findFirst();
         if (item != null) {
             if (item.getType().equals("story")) {
-                holder.mTextView.setText(Html.fromHtml(item.getTitle()));
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -63,8 +62,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         activity.startActivity(intent);
                     }
                 });
+
+                if (item.getTitle() != null) {
+                    holder.mTextView.setText(Html.fromHtml(item.getTitle()));
+                }
             } else if (item.getType().equals("comment")) {
-                holder.mTextView.setText(Html.fromHtml(item.getText()));
+                if (item.getText() != null) {
+                    holder.mTextView.setText(Html.fromHtml(item.getText()));
+                }
             }
         }
     }
