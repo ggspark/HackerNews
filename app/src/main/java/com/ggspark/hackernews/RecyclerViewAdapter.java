@@ -24,8 +24,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Activity activity;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTextView;
-        public TextView mImageView;
+        public TextView text;
+        public TextView user;
+        public TextView time;
+        public TextView comment;
 
         public ViewHolder(View v) {
             super(v);
@@ -43,8 +45,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_recycler_view, parent, false);
         ViewHolder vh = new ViewHolder(v);
-        vh.mTextView = (TextView) v.findViewById(R.id.text);
-        vh.mImageView = (TextView) v.findViewById(R.id.comment);
+        vh.text = (TextView) v.findViewById(R.id.text);
+        vh.user = (TextView) v.findViewById(R.id.user);
+        vh.time = (TextView) v.findViewById(R.id.time);
+        vh.comment = (TextView) v.findViewById(R.id.comment);
         return vh;
     }
 
@@ -64,12 +68,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 });
 
                 if (item.getTitle() != null) {
-                    holder.mTextView.setText(Html.fromHtml(item.getTitle()));
+                    holder.text.setText(Html.fromHtml(item.getTitle()));
                 }
             } else if (item.getType().equals("comment")) {
                 if (item.getText() != null) {
-                    holder.mTextView.setText(Html.fromHtml(item.getText()));
+                    holder.text.setText(Html.fromHtml(item.getText()));
                 }
+            }
+            if (item.getBy() != null) {
+                holder.user.setText(item.getBy());
+            }
+            if (item.getTime() != null) {
+//                Date date = new Date(item.getTime() * 1000L);
+//                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                holder.time.setText(Utility.getTimeAgo(item.getTime()));
+            }
+            if (item.getKids() != null) {
+                holder.comment.setText(String.valueOf(item.getKids().size()));
             }
         }
     }

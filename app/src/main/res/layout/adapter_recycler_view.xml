@@ -22,56 +22,62 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="3">
+            android:weightSum="10">
 
             <FrameLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="3">
 
                 <TextView
                     android:id="@+id/user"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:drawableLeft="@drawable/ic_person_black_24dp"
                     android:drawablePadding="10dp"
+                    android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:padding="10dp"
+                    android:singleLine="true"
                     android:text="" />
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="3">
 
                 <TextView
                     android:id="@+id/time"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:drawableLeft="@drawable/ic_access_time_black_24dp"
                     android:drawablePadding="10dp"
+                    android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:padding="10dp"
+                    android:singleLine="true"
                     android:text="" />
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="4">
 
                 <TextView
                     android:id="@+id/comment"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:drawableLeft="@drawable/ic_comment_black_24dp"
                     android:drawablePadding="10dp"
+                    android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:padding="10dp"
+                    android:singleLine="true"
                     android:text="" />
             </FrameLayout>
 

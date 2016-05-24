@@ -13,7 +13,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".StoryActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize">
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="Stories">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,7 +23,8 @@
         </activity>
         <activity
             android:name=".CommentActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="Comments" />
     </application>
 
 </manifest>
